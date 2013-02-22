@@ -14,7 +14,10 @@ class ExampleClient extends Suchgenie_Client {
         return self::$instance;
     }
 
-    private function __construct(Suchgenie_ServerNameSource $serverNames){
+    public function __construct(Suchgenie_ServerNameSource $serverNames){
+        if (self::$instance != null) {
+            throw new RuntimeException("only one instance is allowed");
+        }
         parent::__construct($serverNames);
     }
     private function __clone(){}

@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/ServerNameSource.php';
 
 abstract class Suchgenie_Client extends Suchgenie_Requester {
 
-    protected function __construct(Suchgenie_ServerNameSource $buildServernames) {
+    public function __construct(Suchgenie_ServerNameSource $buildServernames) {
         parent::__construct($this->generatedUserId(), $buildServernames);
     }
 

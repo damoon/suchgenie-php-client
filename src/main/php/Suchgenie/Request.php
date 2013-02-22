@@ -30,7 +30,7 @@ class Suchgenie_Request extends Suchgenie_Requester {
         return $this->getParallelGet("/api/documentIdentifiers.json", $params);
     }
     
-    function setQuery(String $query) {
+    function setQuery($query) {
         $this->defaultParams['query'] = $query;
         return $this;
     }
