@@ -2,19 +2,32 @@
 
 class ParallelCurl {
 
-    private $userAgent = '';
+    private $userAgent;
+    private $timeout = 10;
     private $mh;
 
-    public function __construct($userAgent = '') {
+    public function __construct($userAgent = 'php/parallelCurl') {
         $this->userAgent = $userAgent;
-        $this->mh = curl_multi_init();
+    }
+    
+    public function isClosed() {
+        return $this->mh == null;
     }
 
     public function close() {
         curl_multi_close($this->mh);
+        $this->mh = null;
+    }
+    
+    public function setTimeout ($timeout) {
+        $this->timeout = $timeout;
     }
 
     public function addGetRequest($url, $getParams = array()) {
+        if ($this->isClosed()) {
+            $this->mh = curl_multi_init();
+        }
+        
         if($getParams !== array()) {
             $url .= "?" . http_build_query($getParams);
         }
@@ -23,6 +36,10 @@ class ParallelCurl {
     }
 
     public function addPostRequest($url, $postParams = array(), $getParams = array()) {
+        if ($this->isClosed()) {
+            $this->mh = curl_multi_init();
+        }
+        
         if($getParams !== array()) {
             $url .= "?" . http_build_query($getParams);
         }
@@ -32,19 +49,11 @@ class ParallelCurl {
         curl_multi_add_handle($this->mh, $ch);
     }
 
-    private function getCurlHandle ($url) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_ENCODING, "gzip, deflate");
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        return $ch;
-    }
-
     public function getFirstResponse() {
+        if ($this->isClosed()) {
+            return null;
+        }
+
         $active = 0;
         do {
             $status = curl_multi_exec($this->mh, $active);
@@ -55,6 +64,18 @@ class ParallelCurl {
             usleep(2000);
         } while ($status === CURLM_CALL_MULTI_PERFORM || $active);
         return null;
+    }
+
+    private function getCurlHandle ($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_ENCODING, "gzip, deflate");
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        return $ch;
     }
 
 }
