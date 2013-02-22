@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/ParallelDownloader.php';
+require_once dirname(__FILE__) . '/ParallelCurl.php';
 
 class SuchgenieClient {
 
@@ -19,95 +19,98 @@ class SuchgenieClient {
     public function generatedUserId() {
         $ip = isset($_SERVER) && isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
         $userAgent = isset($_SERVER) && isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-        return substr(md5($ip, $userAgent), 0, 24);
+        return substr(md5($ip . $userAgent), 0, 24);
     }
 
     public function triggerImport() {
-        $server1 = "http://" + $this->databaseName + "1.suchgenie.com";
-        $server2 = "http://" + $this->databaseName + "1.suchgenie-backup.de";        
+        $server1 = "http://" . $this->databaseName . "1.suchgenie.com";
+        $server2 = "http://" . $this->databaseName . "1.suchgenie-backup.de";
         $download = new ParallelCurl();
-        $download->addPostRequest($server1 + "/importer", array());
-        $download->addPostRequest($server2 + "/importer", array());        
+        $download->addPostRequest($server1 . "/importer", array());
+        $download->addPostRequest($server2 . "/importer", array());
         return $download;
     }
 
-    public function getAutocompletions($query) {
+    public function getAutocompletions($query, $numberOfAutocompletions) {
         $params = array();
         $params['query'] = $query;
+        $params['numberOfAutocompletions'] = $numberOfAutocompletions;
 
-        $download = $this->getParallelGet("/api/autocompletions", $params);
+        $download = $this->getParallelGet("/api/autocompletions.json", $params);
         return $this->getJsonDownload($download);
     }
 
-    public function getDocumentIdentifiers($query) {
+    public function getDocumentIdentifiers($query, $pageNumber, $documentsPerPage) {
         $params = array();
         $params['query'] = $query;
+        $params['pageNumber'] = $pageNumber;
+        $params['documentsPerPage'] = $documentsPerPage;
 
-        $download = $this->getParallelGet("/api/documentIdentifiers", $params);
+        $download = $this->getParallelGet("/api/documentIdentifiers.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logSearch($query) {
         $params = array('query' => $query);
-        $download = $this->getParallelPost("/api/log/search", $params);
+        $download = $this->getParallelPost("/api/log/search.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logSearchExtended($query) {
         $params = array('query' => $query);
-        $download = $this->getParallelPost("/api/log/searchExtended", $params);
+        $download = $this->getParallelPost("/api/log/searchExtended.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logDocumentView($documentIdentifier) {
         $params = array('documentIdentifier' => $documentIdentifier);
-        $download = $this->getParallelPost("/api/log/documentView", $params);
+        $download = $this->getParallelPost("/api/log/documentView.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logPreparedOrder($documentIdentifier) {
         $params = array('documentIdentifier' => $documentIdentifier);
-        $download = $this->getParallelPost("/api/log/preparedOrder", $params);
+        $download = $this->getParallelPost("/api/log/preparedOrder.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logOrder(array $documentIdentifiers) {
         $params = array('documentIdentifiers' => implode(',', $documentIdentifiers));
-        $download = $this->getParallelPost("/api/log/order", $params);
+        $download = $this->getParallelPost("/api/log/order.json", $params);
         return $this->getJsonDownload($download);
     }
 
-    private function getTimestampMillisec() {
+    private function getTimestampMicrosec() {
         // this has more precission than microtime(true)
         list($usec, $sec) = explode(" ", microtime());
-        return $sec + (string)round($usec * 1000);
+        return $sec . substr($usec, 2, -2); // 0.12345600 -> 1234556
     }
 
     private function getParallelGet($path, $params) {
         $params['userId'] = $this->userId;
-        $params['ts'] = $this->getTimestampMillisec();
-        
-        $server1 = "http://" + $this->databaseName + "1.suchgenie.com";
-        $server2 = "http://" + $this->databaseName + "2.suchgenie-backup.de";
-        
+        $params['ts'] = $this->getTimestampMicrosec();
+
+        $server1 = "http://" . $this->databaseName . "1.suchgenie.com";
+        $server2 = "http://" . $this->databaseName . "2.suchgenie-backup.de";
+
         $download = new ParallelCurl();
-        $download->addGetRequest($server1 + $path, $params);
-        $download->addGetRequest($server2 + $path, $params);
-        
+        $download->addGetRequest($server1 . $path, $params);
+        $download->addGetRequest($server2 . $path, $params);
+
         return $download;
     }
 
     private function getParallelPost($path, $params) {
         $params['userId'] = $this->userId;
-        $params['ts'] = $this->getTimestampMillisec();
-        
-        $server1 = "http://" + $this->databaseName + "1.suchgenie.com";
-        $server2 = "http://" + $this->databaseName + "2.suchgenie-backup.de";
-        
+        $params['ts'] = $this->getTimestampMicrosec();
+
+        $server1 = "http://" . $this->databaseName . "1.suchgenie.com";
+        $server2 = "http://" . $this->databaseName . "2.suchgenie-backup.de";
+
         $download = new ParallelCurl();
-        $download->addPostRequest($server1 + $path, $params);
-        $download->addPostRequest($server2 + $path, $params);
-        
+        $download->addPostRequest($server1 . $path, $params);
+        $download->addPostRequest($server2 . $path, $params);
+
         return $download;
     }
 

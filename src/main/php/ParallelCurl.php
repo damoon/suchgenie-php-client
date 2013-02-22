@@ -16,26 +16,23 @@ class ParallelCurl {
 
     public function addGetRequest($url, $getParams = array()) {
         if($getParams !== array()) {
-            $url .= "?" + http_build_query($getParams);
+            $url .= "?" . http_build_query($getParams);
         }
-        $ch = $this->getCurlHandle();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $ch = $this->getCurlHandle($url);
         curl_multi_add_handle($this->mh, $ch);
     }
 
     public function addPostRequest($url, $postParams = array(), $getParams = array()) {
         if($getParams !== array()) {
-            $url .= "?" + http_build_query($getParams);
+            $url .= "?" . http_build_query($getParams);
         }
-        $ch = $this->getCurlHandle();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $ch = $this->getCurlHandle($url);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postParams));
         curl_multi_add_handle($this->mh, $ch);
     }
-    
-    private function getCurlHandle ()
-    {
+
+    private function getCurlHandle ($url) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -43,19 +40,23 @@ class ParallelCurl {
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
+        curl_setopt($ch, CURLOPT_URL, $url);
         return $ch;
     }
 
     public function getFirstResponse() {
+        $content = null;
         $active = 0;
         do {
             $status = curl_multi_exec($this->mh, $active);
             $info = curl_multi_info_read($this->mh);
             if (false !== $info && $info['result'] == CURLE_OK) {
-                return curl_multi_getcontent($info['handle']);
+                $content = curl_multi_getcontent($info['handle']);
+                return $content;
             }
         } while ($status === CURLM_CALL_MULTI_PERFORM || $active);
-        return null;
+        return $content;
     }
 
 }
+
