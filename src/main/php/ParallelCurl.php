@@ -45,17 +45,16 @@ class ParallelCurl {
     }
 
     public function getFirstResponse() {
-        $content = null;
         $active = 0;
         do {
             $status = curl_multi_exec($this->mh, $active);
             $info = curl_multi_info_read($this->mh);
             if (false !== $info && $info['result'] == CURLE_OK) {
-                $content = curl_multi_getcontent($info['handle']);
-                return $content;
+                return curl_multi_getcontent($info['handle']);
             }
+            usleep(2000);
         } while ($status === CURLM_CALL_MULTI_PERFORM || $active);
-        return $content;
+        return null;
     }
 
 }

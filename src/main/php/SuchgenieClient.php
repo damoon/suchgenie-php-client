@@ -83,7 +83,8 @@ class SuchgenieClient {
     private function getTimestampMicrosec() {
         // this has more precission than microtime(true)
         list($usec, $sec) = explode(" ", microtime());
-        return $sec . substr($usec, 2, -2); // 0.12345600 -> 1234556
+        return $sec . substr($usec, 2, 6); // 0.12345600 -> 123456
+
     }
 
     private function getParallelGet($path, $params) {
