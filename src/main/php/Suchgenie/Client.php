@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../Tools/ParallelCurl.php';
+require_once dirname(__FILE__) . '/JsonDownload.php';
 
 class Suchgenie_Client {
 
@@ -37,7 +38,8 @@ class Suchgenie_Client {
         $params['numberOfAutocompletions'] = $numberOfAutocompletions;
 
         $download = $this->getParallelGet("/api/autocompletions.json", $params);
-        return $this->getJsonDownload($download);
+        $jsonDownload = new Suchgenie_JsonDownload($download);
+        return $jsonDownload->getJson();
     }
 
     public function getDocumentIdentifiers($query, $pageNumber, $documentsPerPage) {
@@ -47,37 +49,43 @@ class Suchgenie_Client {
         $params['documentsPerPage'] = $documentsPerPage;
 
         $download = $this->getParallelGet("/api/documentIdentifiers.json", $params);
-        return $this->getJsonDownload($download);
+        $jsonDownload = new Suchgenie_JsonDownload($download);
+        return $jsonDownload->getJson();
     }
 
     public function logSearch($query) {
         $params = array('event' => 'search', 'query' => $query);
         $download = $this->getParallelPost("/api/log.json", $params);
-        return $this->getJsonDownload($download);
+        $jsonDownload = new Suchgenie_JsonDownload($download);
+        return $jsonDownload->getJson();
     }
 
     public function logSearchExtended($query) {
         $params = array('event' => 'searchExtended', 'query' => $query);
         $download = $this->getParallelPost("/api/log.json", $params);
-        return $this->getJsonDownload($download);
+        $jsonDownload = new Suchgenie_JsonDownload($download);
+        return $jsonDownload->getJson();
     }
 
     public function logDocumentView($documentIdentifier) {
         $params = array('event' => 'documentView', 'documentIdentifier' => $documentIdentifier);
         $download = $this->getParallelPost("/api/log.json", $params);
-        return $this->getJsonDownload($download);
+        $jsonDownload = new Suchgenie_JsonDownload($download);
+        return $jsonDownload->getJson();
     }
 
     public function logPreparedOrder($documentIdentifier) {
         $params = array('event' => 'preparedOrder', 'documentIdentifier' => $documentIdentifier);
         $download = $this->getParallelPost("/api/log.json", $params);
-        return $this->getJsonDownload($download);
+        $jsonDownload = new Suchgenie_JsonDownload($download);
+        return $jsonDownload->getJson();
     }
 
     public function logOrder(array $documentIdentifiers) {
         $params = array('event' => 'order', 'documentIdentifiers' => implode(',', $documentIdentifiers));
         $download = $this->getParallelPost("/api/log.json", $params);
-        return $this->getJsonDownload($download);
+        $jsonDownload = new Suchgenie_JsonDownload($download);
+        return $jsonDownload->getJson();
     }
 
     private function getTimestampMicrosec() {
@@ -113,19 +121,6 @@ class Suchgenie_Client {
         $download->addPostRequest($server2 . $path, $params);
 
         return $download;
-    }
-
-    private function getJsonDownload($download) {
-        while (true) {
-            $content = $download->getFirstResponse();
-            if ($content == null) {
-                return null;
-            }
-            $json = json_decode($content, true);
-            if (is_array($json)) {
-                return $json;
-            }
-        }
     }
 
 }
