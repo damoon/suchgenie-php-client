@@ -51,32 +51,32 @@ class Suchgenie_Client {
     }
 
     public function logSearch($query) {
-        $params = array('query' => $query);
-        $download = $this->getParallelPost("/api/log/search.json", $params);
+        $params = array('event' => 'search', 'query' => $query);
+        $download = $this->getParallelPost("/api/log.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logSearchExtended($query) {
-        $params = array('query' => $query);
-        $download = $this->getParallelPost("/api/log/searchExtended.json", $params);
+        $params = array('event' => 'searchExtended', 'query' => $query);
+        $download = $this->getParallelPost("/api/log.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logDocumentView($documentIdentifier) {
-        $params = array('documentIdentifier' => $documentIdentifier);
-        $download = $this->getParallelPost("/api/log/documentView.json", $params);
+        $params = array('event' => 'documentView', 'documentIdentifier' => $documentIdentifier);
+        $download = $this->getParallelPost("/api/log.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logPreparedOrder($documentIdentifier) {
-        $params = array('documentIdentifier' => $documentIdentifier);
-        $download = $this->getParallelPost("/api/log/preparedOrder.json", $params);
+        $params = array('event' => 'preparedOrder', 'documentIdentifier' => $documentIdentifier);
+        $download = $this->getParallelPost("/api/log.json", $params);
         return $this->getJsonDownload($download);
     }
 
     public function logOrder(array $documentIdentifiers) {
-        $params = array('documentIdentifiers' => implode(',', $documentIdentifiers));
-        $download = $this->getParallelPost("/api/log/order.json", $params);
+        $params = array('event' => 'order', 'documentIdentifiers' => implode(',', $documentIdentifiers));
+        $download = $this->getParallelPost("/api/log.json", $params);
         return $this->getJsonDownload($download);
     }
 
