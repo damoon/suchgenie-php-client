@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(__FILE__) . '/ParallelCurl.php';
+require_once dirname(__FILE__) . '/../Tools/ParallelCurl.php';
 
-class SuchgenieClient {
+class Suchgenie_Client {
 
     private $databaseName;
     private $userId;
@@ -94,7 +94,7 @@ class SuchgenieClient {
         $server1 = "http://" . $this->databaseName . "1.suchgenie.com";
         $server2 = "http://" . $this->databaseName . "2.suchgenie-backup.de";
 
-        $download = new ParallelCurl();
+        $download = new Tools_ParallelCurl();
         $download->addGetRequest($server1 . $path, $params);
         $download->addGetRequest($server2 . $path, $params);
 
@@ -108,7 +108,7 @@ class SuchgenieClient {
         $server1 = "http://" . $this->databaseName . "1.suchgenie.com";
         $server2 = "http://" . $this->databaseName . "2.suchgenie-backup.de";
 
-        $download = new ParallelCurl();
+        $download = new Tools_ParallelCurl();
         $download->addPostRequest($server1 . $path, $params);
         $download->addPostRequest($server2 . $path, $params);
 

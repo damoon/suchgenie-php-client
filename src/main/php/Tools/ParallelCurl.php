@@ -1,6 +1,6 @@
 <?php
 
-class ParallelCurl {
+class Tools_ParallelCurl {
 
     private $userAgent;
     private $timeout = 10;
