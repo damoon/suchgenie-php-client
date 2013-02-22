@@ -14,7 +14,7 @@ class ExampleClient extends Suchgenie_Client {
         return self::$instance;
     }
 
-    private function __construct(Suchgenie_ServerNameBuilder $serverNames){
+    private function __construct(Suchgenie_ServerNameSource $serverNames){
         parent::__construct($serverNames);
     }
     private function __clone(){}

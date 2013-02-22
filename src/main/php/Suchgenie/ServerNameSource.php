@@ -1,5 +1,5 @@
 <?php
 
-interface Suchgenie_ServerNameBuilder {
+interface Suchgenie_ServerNameSource {
     function getServerNames();
 }

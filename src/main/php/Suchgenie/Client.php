@@ -1,12 +1,13 @@
 <?php
 
 require_once dirname(__FILE__) . '/../Tools/ParallelCurl.php';
-require_once dirname(__FILE__) . '/JsonDownload.php';
 require_once dirname(__FILE__) . '/Requester.php';
+require_once dirname(__FILE__) . '/Request.php';
+require_once dirname(__FILE__) . '/ServerNameSource.php';
 
 abstract class Suchgenie_Client extends Suchgenie_Requester {
 
-    protected function __construct(Suchgenie_ServerNameBuilder $buildServernames) {
+    protected function __construct(Suchgenie_ServerNameSource $buildServernames) {
         parent::__construct($this->generatedUserId(), $buildServernames);
     }
 

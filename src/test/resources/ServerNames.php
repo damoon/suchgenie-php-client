@@ -1,8 +1,8 @@
 <?php
 
-include dirname(__FILE__) . "/../../main/php/Suchgenie/ServerNameBuilder.php";
+include dirname(__FILE__) . "/../../main/php/Suchgenie/ServerNameSource.php";
 
-class ServerNames implements Suchgenie_ServerNameBuilder {
+class ServerNames implements Suchgenie_ServerNameSource {
     
     private $servernames = array();
     

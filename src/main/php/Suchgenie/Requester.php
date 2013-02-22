@@ -1,11 +1,13 @@
 <?php
 
+require_once dirname(__FILE__) . '/ServerNameSource.php';
+
 abstract class Suchgenie_Requester {
 
     protected $userId;
     protected $buildServernames;
 
-    public function __construct($userId, Suchgenie_ServerNameBuilder $buildServernames) {
+    public function __construct($userId, Suchgenie_ServerNameSource $buildServernames) {
         $this->setUserId($userId);
         $this->buildServernames = $buildServernames;
     }
