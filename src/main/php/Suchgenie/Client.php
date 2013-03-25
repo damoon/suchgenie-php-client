@@ -76,4 +76,9 @@ abstract class Suchgenie_Client extends Suchgenie_Requester {
         return $this->getParallelPost("/api/log.json", $params);
     }
 
+    public function logEvent($event, $params = array()) {
+        $params['event'] = $event;
+        return $this->getParallelPost("/api/log.json", $params);
+    }
+
 }
