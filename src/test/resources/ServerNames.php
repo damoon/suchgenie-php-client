@@ -6,7 +6,7 @@ class ServerNames implements Suchgenie_ServerNameSource {
     
     private $nick;
     
-    function __constructor($nick) {
+    function __construct($nick) {
         $this->nick = $nick;
     }
     
