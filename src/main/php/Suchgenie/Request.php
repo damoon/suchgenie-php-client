@@ -56,9 +56,10 @@ class Suchgenie_Request extends Suchgenie_Requester {
     }
     
     function setFilter($attribute, $comparisonType, $value) {
-        $this->documentsParams['filter' . $comparisonType . $attribute] = $value;
+        $filter = 'filter' . $attribute . $comparisonType;
+        $this->documentsParams[$filter] = $value;
         if ($value == null) {
-            unset($this->documentsParams['filter' . $comparisonType . $attribute]);
+            unset($this->documentsParams[$filter]);
         }
         return $this;
     }
