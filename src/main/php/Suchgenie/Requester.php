@@ -6,6 +6,8 @@ abstract class Suchgenie_Requester {
 
     protected $userId;
     protected $buildServernames;
+    protected $username;
+    protected $password;
 
     public function __construct($userId, Suchgenie_ServerNameSource $buildServernames) {
         $this->setUserId($userId);
@@ -15,6 +17,12 @@ abstract class Suchgenie_Requester {
     public function setUserId($userId) {
         $this->userId = $userId;
     }
+    
+    public function setAuth($username, $password) {
+        $this->username = $username;
+        $this->password = $password;
+        return $this;
+    }
 
     protected function getParallelGet($path, $params) {
         $params['userId'] = $this->userId;
@@ -23,6 +31,9 @@ abstract class Suchgenie_Requester {
         $servers = $this->buildServernames->getServerNames();
 
         $download = new Tools_ParallelCurl();
+        if (isset($this->username)) {
+            $download->setAuth($this->username, $this->password);
+        }
         $download->addGetRequest($servers[0] . $path, $params);
         $download->addGetRequest($servers[1] . $path, $params);
 
@@ -36,6 +47,9 @@ abstract class Suchgenie_Requester {
         $servers = $this->buildServernames->getServerNames();
 
         $download = new Tools_ParallelCurl();
+        if (isset($this->username)) {
+            $download->setAuth($this->username, $this->password);
+        }
         $download->addPostRequest($servers[0] . $path, $params);
         $download->addPostRequest($servers[1] . $path, $params);
 

@@ -6,6 +6,9 @@ class Tools_ParallelCurl {
     private $timeout = 10;
     private $mh;
 
+    private $username;
+    private $password;
+
     public function __construct($userAgent = 'php/parallelCurl') {
         $this->userAgent = $userAgent;
     }
@@ -21,6 +24,11 @@ class Tools_ParallelCurl {
     
     public function setTimeout ($timeout) {
         $this->timeout = $timeout;
+    }
+
+    public function setAuth ($username, $password) {
+        $this->username = $username;
+        $this->password = $password;
     }
 
     public function addGetRequest($url, $getParams = array()) {
@@ -75,6 +83,9 @@ class Tools_ParallelCurl {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_URL, $url);
+        if (isset($this->username)) {
+            curl_setopt($ch, CURLOPT_USERPWD, $this->username . ":" . $this->password);
+        }
         return $ch;
     }
 

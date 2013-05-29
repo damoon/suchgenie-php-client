@@ -10,6 +10,7 @@ class ExampleClient extends Suchgenie_Client {
     static public function getInstance() {
         if (null === self::$instance) {
             self::$instance = new self (new ServerNames("test"));
+            self::$instance->setAuth("test", "test");
         }
         return self::$instance;
     }

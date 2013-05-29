@@ -18,7 +18,11 @@ abstract class Suchgenie_Client extends Suchgenie_Requester {
     }
     
     public function initRequest() {
-        return new Suchgenie_Request($this->userId, $this->buildServernames);
+        $request = new Suchgenie_Request($this->userId, $this->buildServernames);
+        if (isset($this->username)) {
+            $request->setAuth($this->username, $this->password);
+        }
+        return $request;
     }
 
     public function triggerImport() {
