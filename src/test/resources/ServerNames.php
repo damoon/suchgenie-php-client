@@ -1,6 +1,6 @@
 <?php
 
-include dirname(__FILE__) . "/../../main/php/Suchgenie/ServerNameSource.php";
+require_once dirname(__FILE__) . "/../../main/php/Suchgenie/ServerNameSource.php";
 
 class ServerNames implements Suchgenie_ServerNameSource {
     

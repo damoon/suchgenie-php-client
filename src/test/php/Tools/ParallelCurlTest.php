@@ -1,6 +1,6 @@
 <?php
 
-include dirname(__FILE__) . "/../../../main/php/Tools/ParallelCurl.php";
+require_once dirname(__FILE__) . "/../../../main/php/Tools/ParallelCurl.php";
 
 class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     

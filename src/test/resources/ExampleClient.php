@@ -1,7 +1,7 @@
 <?php
 
-include dirname(__FILE__) . "/../../main/php/Suchgenie/Client.php";
-include dirname(__FILE__) . "/ServerNames.php";
+require_once dirname(__FILE__) . "/../../main/php/Suchgenie/Client.php";
+require_once dirname(__FILE__) . "/ServerNames.php";
 
 class ExampleClient extends Suchgenie_Client {
 
@@ -9,7 +9,7 @@ class ExampleClient extends Suchgenie_Client {
     
     static public function getInstance() {
         if (null === self::$instance) {
-            self::$instance = new self (new ServerNames());
+            self::$instance = new self (new ServerNames("test"));
         }
         return self::$instance;
     }
