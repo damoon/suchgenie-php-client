@@ -8,7 +8,7 @@ $request = $client->initRequest()->setQuery("sonne");
 
 $docIds = $request->getDocumentIdentifiers();
 
-$navigation = $request->getNavigation(array("name"));
+$navigation = $request->getNavigation(array("word"));
 
 var_dump($docIds);
 

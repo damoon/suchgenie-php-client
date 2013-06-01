@@ -13,7 +13,7 @@ class Tools_ParallelCurl {
     public function __construct($userAgent = 'php/parallelCurl') {
         $this->userAgent = $userAgent;
     }
-    
+
     public function isClosed() {
         return $this->mh == null;
     }

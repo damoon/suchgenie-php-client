@@ -1,68 +1,21 @@
 <?php
 
-require_once dirname(__FILE__) . '/ServerNameSource.php';
-
 abstract class Suchgenie_Requester {
 
-    protected $userId;
-    protected $buildServernames;
-    protected $username;
-    protected $password;
+    protected $connectionFactory;
 
-    public function __construct($userId, Suchgenie_ServerNameSource $buildServernames) {
-        $this->setUserId($userId);
-        $this->buildServernames = $buildServernames;
+    public function __construct(Suchgenie_ConnectionFactory $connectionFactory) {
+        $this->connectionFactory = $connectionFactory;
     }
 
-    public function setUserId($userId) {
-        $this->userId = $userId;
-    }
-    
-    public function setAuth($username, $password) {
-        $this->username = $username;
-        $this->password = $password;
-        return $this;
+    public function getParallelGet($path, $params) {
+        return $this->getJson($this->connectionFactory->getParallelGet($path, $params));
     }
 
-    protected function getParallelGet($path, $params) {
-        $params['userId'] = $this->userId;
-        $params['ts'] = $this->getTimestampMicrosec();
-
-        $servers = $this->buildServernames->getServerNames();
-
-        $download = new Tools_ParallelCurl();
-        if (isset($this->username)) {
-            $download->setAuth($this->username, $this->password);
-        }
-        $download->addGetRequest($servers[0] . $path, $params);
-        $download->addGetRequest($servers[1] . $path, $params);
-
-        return $this->getJson($download);
+    public function getParallelPost($path, $params) {
+        return $this->getJson($this->connectionFactory->getParallelPost($path, $params));
     }
 
-    protected function getParallelPost($path, $params) {
-        $params['userId'] = $this->userId;
-        $params['ts'] = $this->getTimestampMicrosec();
-
-        $servers = $this->buildServernames->getServerNames();
-
-        $download = new Tools_ParallelCurl();
-        if (isset($this->username)) {
-            $download->setAuth($this->username, $this->password);
-        }
-        $download->addPostRequest($servers[0] . $path, $params);
-        $download->addPostRequest($servers[1] . $path, $params);
-
-        return $this->getJson($download);
-    }
-
-    private function getTimestampMicrosec() {
-        // this has more precission than microtime(true)
-        list($usec, $sec) = explode(" ", microtime());
-        return $sec . substr($usec, 2, 6); // 0.12345600 -> 123456
-
-    }
-    
     protected function getJson($download) {
         while (true) {
             $content = $download->getFirstResponse();

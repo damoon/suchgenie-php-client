@@ -3,26 +3,13 @@
 require_once dirname(__FILE__) . '/../Tools/ParallelCurl.php';
 require_once dirname(__FILE__) . '/Requester.php';
 require_once dirname(__FILE__) . '/Request.php';
-require_once dirname(__FILE__) . '/ServerNameSource.php';
+require_once dirname(__FILE__) . '/UserIdFactory.php';
+require_once dirname(__FILE__) . '/ServerSelectionPolicy.php';
 
-abstract class Suchgenie_Client extends Suchgenie_Requester {
+class Suchgenie_Client extends Suchgenie_Requester {
 
-    public function __construct(Suchgenie_ServerNameSource $buildServernames) {
-        parent::__construct($this->generatedUserId(), $buildServernames);
-    }
-
-    public function generatedUserId() {
-        $ip = isset($_SERVER) && isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        $userAgent = isset($_SERVER) && isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-        return substr(md5($ip . $userAgent), 0, 24);
-    }
-    
     public function initRequest() {
-        $request = new Suchgenie_Request($this->userId, $this->buildServernames);
-        if (isset($this->username)) {
-            $request->setAuth($this->username, $this->password);
-        }
-        return $request;
+        return new Suchgenie_Request($this->connectionFactory);
     }
 
     public function getAutocompletions($query, $numberOfAutocompletions) {
