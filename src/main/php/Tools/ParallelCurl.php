@@ -3,7 +3,8 @@
 class Tools_ParallelCurl {
 
     private $userAgent;
-    private $timeout = 10;
+    private $connectTimeout = 10;
+    private $readTimeout = 10;
     private $mh;
 
     private $username;
@@ -22,8 +23,16 @@ class Tools_ParallelCurl {
         $this->mh = null;
     }
     
-    public function setTimeout ($timeout) {
-        $this->timeout = $timeout;
+    public function setUserAgent ($userAgent) {
+        $this->userAgent = $userAgent;
+    }
+    
+    public function setConnectionTimeout ($timeout) {
+        $this->connectTimeout = $timeout;
+    }
+
+    public function setReadTimeout ($timeout) {
+        $this->readTimeout = $timeout;
     }
 
     public function setAuth ($username, $password) {
@@ -79,8 +88,8 @@ class Tools_ParallelCurl {
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_ENCODING, "gzip, deflate");
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->readTimeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connectTimeout);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_URL, $url);
         if (isset($this->username)) {
