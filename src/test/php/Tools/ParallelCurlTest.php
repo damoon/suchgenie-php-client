@@ -102,7 +102,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
         $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php", array('delay'=>4));
         
         $before = microtime(true);
-        $this->assertContains("sleeped for 3 sec", $parallelCurl->getFirstResponse());
+        $this->assertContains("slept for 3 sec", $parallelCurl->getFirstResponse());
         $after = microtime(true);
         $delay = $after - $before;
         

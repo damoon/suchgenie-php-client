@@ -7,7 +7,7 @@ echo "POST: " . json_encode($_POST) . "\n";
 if (isset($_REQUEST['delay'])) {
         $delay = max(0, min((int)$_REQUEST['delay'], 15));
         sleep($delay);
-        echo "sleeped for $delay sec\n";
+        echo "slept for $delay sec\n";
 }
 
 echo "done";
