@@ -7,7 +7,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     public function testOpensAndCloses() {
         $parallelCurl = new Tools_ParallelCurl("testAgent");
         $this->assertTrue($parallelCurl->isClosed());
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php");        
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php");
         $this->assertFalse($parallelCurl->isClosed());
         $this->assertContains("AGENT: testAgent", $parallelCurl->getFirstResponse());
         $this->assertFalse($parallelCurl->isClosed());
@@ -17,7 +17,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testDefaultAgent() {
         $parallelCurl = new Tools_ParallelCurl();
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php");
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php");
         
         $this->assertContains("AGENT: php/parallelCurl", $parallelCurl->getFirstResponse());
         
@@ -26,7 +26,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testChangedAgent() {
         $parallelCurl = new Tools_ParallelCurl("testAgent");
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php");
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php");
         
         $this->assertContains("AGENT: testAgent", $parallelCurl->getFirstResponse());
         
@@ -35,7 +35,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testGet() {
         $parallelCurl = new Tools_ParallelCurl("testAgent");
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php", array('a'=>'b'));
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php", array('a'=>'b'));
         
         $this->assertContains('GET: {"a":"b"}', $parallelCurl->getFirstResponse());
         
@@ -44,7 +44,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testPost() {
         $parallelCurl = new Tools_ParallelCurl("testAgent");
-        $parallelCurl->addPostRequest("http://www.suchgenie.de/curlTester.php", array('a'=>'b'));
+        $parallelCurl->addPostRequest("http://curltest.suchgenie.de/curlTester.php", array('a'=>'b'));
         
         $this->assertContains('POST: {"a":"b"}', $parallelCurl->getFirstResponse());
         
@@ -53,7 +53,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testGetAndPost() {
         $parallelCurl = new Tools_ParallelCurl("testAgent");
-        $parallelCurl->addPostRequest("http://www.suchgenie.de/curlTester.php", array('a'=>'b'), array('c'=>'d'));
+        $parallelCurl->addPostRequest("http://curltest.suchgenie.de/curlTester.php", array('a'=>'b'), array('c'=>'d'));
         
         $body = $parallelCurl->getFirstResponse();
         $this->assertContains('POST: {"a":"b"}', $body);
@@ -66,14 +66,14 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
         $parallelCurl = new Tools_ParallelCurl("testAgent");        
         $this->assertTrue($parallelCurl->isClosed());
         
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php");        
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php");
         $this->assertFalse($parallelCurl->isClosed());
         $this->assertContains("AGENT: testAgent", $parallelCurl->getFirstResponse());
         $this->assertFalse($parallelCurl->isClosed());
         $parallelCurl->close();        
         $this->assertTrue($parallelCurl->isClosed());
         
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php");        
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php");
         $this->assertFalse($parallelCurl->isClosed());
         $this->assertContains("AGENT: testAgent", $parallelCurl->getFirstResponse());
         $this->assertFalse($parallelCurl->isClosed());
@@ -83,7 +83,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testDelayed() {
         $parallelCurl = new Tools_ParallelCurl();
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php", array('delay'=>3));
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php", array('delay'=>3));
         
         $before = microtime(true);
         $this->assertContains("AGENT: php/parallelCurl", $parallelCurl->getFirstResponse());
@@ -98,8 +98,8 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testFaster() {
         $parallelCurl = new Tools_ParallelCurl();
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php", array('delay'=>3));
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php", array('delay'=>4));
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php", array('delay'=>3));
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php", array('delay'=>4));
         
         $before = microtime(true);
         $this->assertContains("slept for 3 sec", $parallelCurl->getFirstResponse());
@@ -114,7 +114,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testDefaultTimeout() {
         $parallelCurl = new Tools_ParallelCurl();
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php", array('delay'=>12));
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php", array('delay'=>12));
         
         $before = microtime(true);
         $body = $parallelCurl->getFirstResponse();
@@ -131,7 +131,7 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     public function testSetTimeout() {
         $parallelCurl = new Tools_ParallelCurl();
         $parallelCurl->setTimeout(4);
-        $parallelCurl->addGetRequest("http://www.suchgenie.de/curlTester.php", array('delay'=>12));
+        $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php", array('delay'=>12));
         
         $before = microtime(true);
         $body = $parallelCurl->getFirstResponse();
