@@ -25,13 +25,6 @@ abstract class Suchgenie_Client extends Suchgenie_Requester {
         return $request;
     }
 
-    public function triggerImport() {
-        $servers = $this->buildServernames->getServers();
-        $download = new Tools_ParallelCurl();
-        $download->addPostRequest($servers[0] . "/api/import.json", array());
-        return $this->getJson($download) != null;
-    }
-
     public function getAutocompletions($query, $numberOfAutocompletions) {
         $params = array(
             'query' => $query,
