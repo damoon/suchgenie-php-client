@@ -10,8 +10,14 @@ $docIds = $request->getDocumentIdentifiers();
 
 $navigation = $request->getNavigation(array("word"));
 
+$logging = $client->logOrder(array("13"));
+
+$docIdsAndNavigation = $request->getDocumentIdentifiersAndNavigation(array("word"));
+
 var_dump($docIds);
 
 var_dump($navigation);
 
-$client->logOrder(array("1"));
+var_dump($logging);
+
+var_dump($docIdsAndNavigation);

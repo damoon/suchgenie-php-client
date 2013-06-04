@@ -14,7 +14,7 @@ class Suchgenie_Client extends Suchgenie_Requester {
         return new Suchgenie_Request($this->connectionFactory);
     }
 
-    public function getAutocompletions($query, $numberOfAutocompletions) {
+    public function getAutocompletions($query, $numberOfAutocompletions=12) {
         $params = array(
             'query' => $query,
             'numberOfAutocompletions' => $numberOfAutocompletions

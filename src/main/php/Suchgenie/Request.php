@@ -4,8 +4,11 @@ class Suchgenie_Request extends Suchgenie_Requester {
 
     private $defaultParams = array();
     private $documentsParams = array();
+    private $sortings = array();
+    private $documentsSortings = array();
+    private $navigationSortings = array();
 
-    function getNavigation ($attributes=array()) {
+    function getNavigation ($attributes) {
         // query,                               comparators, filters,           attributes
         $params = array();
         $params += $this->defaultParams;
@@ -13,11 +16,12 @@ class Suchgenie_Request extends Suchgenie_Requester {
         return $this->getParallelGet("/api/navigation.json", $params);
     }
 
-    function getDocuments ($attributes=array()) {
+    function getDocuments ($attributes) {
         // query, documentsPerPage, pageNumber, comparators, filters, sortings, attributes
         $params = array();
         $params += $this->defaultParams;
         $params += $this->documentsParams;
+        $params += $this->sortings;
         $params['attributes'] = implode(',', $attributes);
         return $this->getParallelGet("/api/documents.json", $params);
     }
@@ -27,7 +31,31 @@ class Suchgenie_Request extends Suchgenie_Requester {
         $params = array();
         $params += $this->defaultParams;
         $params += $this->documentsParams;
+        $params += $this->sortings;
         return $this->getParallelGet("/api/documentIdentifiers.json", $params);
+    }
+
+    function getDocumentsAndNavigation ($documentAttributes, $navigationAttributes) {
+        // query, documentsPerPage, pageNumber, comparators, filters, sortings, attributes
+        $params = array();
+        $params += $this->defaultParams;
+        $params += $this->documentsParams;
+        $params += $this->documentsSortings;
+        $params += $this->navigationSortings;
+        $params['documentAttributes'] = implode(',', $documentAttributes);
+        $params['navigationAttributes'] = implode(',', $navigationAttributes);
+        return $this->getParallelGet("/api/documentsAndNavigation.json", $params);
+    }
+
+    function getDocumentIdentifiersAndNavigation ($attributes) {
+        // query, documentsPerPage, pageNumber, comparators, filters, sortings
+        $params = array();
+        $params += $this->defaultParams;
+        $params += $this->documentsParams;
+        $params += $this->documentsSortings;
+        $params += $this->navigationSortings;
+        $params['attributes'] = implode(',', $attributes);
+        return $this->getParallelGet("/api/documentIdentifiersAndNavigation.json", $params);
     }
 
     function setQuery($query) {
@@ -51,7 +79,17 @@ class Suchgenie_Request extends Suchgenie_Requester {
     }
 
     function setSorting($attribute, $direction) {
-        $this->documentsParams['sort' . $attribute] = $direction;
+        $this->sortings['sort' . $attribute] = $direction;
+        return $this;
+    }
+
+    function setDocumentsSorting($attribute, $direction) {
+        $this->documentsSortings['sortDocuments' . $attribute] = $direction;
+        return $this;
+    }
+
+    function setNavigationSorting($attribute, $direction) {
+        $this->navigationSortings['sortNavigation' . $attribute] = $direction;
         return $this;
     }
 

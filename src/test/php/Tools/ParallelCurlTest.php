@@ -130,7 +130,8 @@ class ParallelCurlTest extends PHPUnit_Framework_TestCase {
     
     public function testSetTimeout() {
         $parallelCurl = new Tools_ParallelCurl();
-        $parallelCurl->setTimeout(4);
+        $parallelCurl->setConnectionTimeout(4);
+        $parallelCurl->setReadTimeout(4);
         $parallelCurl->addGetRequest("http://curltest.suchgenie.de/curlTester.php", array('delay'=>12));
         
         $before = microtime(true);
