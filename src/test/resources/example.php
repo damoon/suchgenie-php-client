@@ -13,3 +13,5 @@ $navigation = $request->getNavigation(array("word"));
 var_dump($docIds);
 
 var_dump($navigation);
+
+$client->logOrder(array("1"));

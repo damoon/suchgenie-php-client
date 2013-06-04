@@ -22,42 +22,37 @@ class Suchgenie_Client extends Suchgenie_Requester {
 
     public function logSearch($query) {
         $params = array(
-            'event' => 'search',
             'query' => $query
         );
-        return $this->getParallelPost("/api/log.json", $params);
+        return $this->logEvent("search", $params);
     }
 
     public function logSearchExtended($query) {
         $params = array(
-            'event' => 'searchExtended',
             'query' => $query
         );
-        return $this->getParallelPost("/api/log.json", $params);
+        return $this->logEvent("searchExtended", $params);
     }
 
     public function logDocumentView($documentIdentifier) {
         $params = array(
-            'event' => 'documentView',
             'documentIdentifier' => $documentIdentifier
         );
-        return $this->getParallelPost("/api/log.json", $params);
+        return $this->logEvent("documentView", $params);
     }
 
     public function logPreparedOrder($documentIdentifier) {
         $params = array(
-            'event' => 'preparedOrder',
             'documentIdentifier' => $documentIdentifier
         );
-        return $this->getParallelPost("/api/log.json", $params);
+        return $this->logEvent("preparedOrder", $params);
     }
 
     public function logOrder(array $documentIdentifiers) {
         $params = array(
-            'event' => 'order',
             'documentIdentifiers' => implode(',', $documentIdentifiers)
         );
-        return $this->getParallelPost("/api/log.json", $params);
+        return $this->logEvent("order", $params);
     }
 
     public function logEvent($event, $params = array()) {
