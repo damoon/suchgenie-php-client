@@ -8,6 +8,8 @@ require_once dirname(__FILE__) . '/ServerSelectionPolicy.php';
 
 class Suchgenie_Client extends Suchgenie_Requester {
 
+    const VERSION = 'v2.5';
+    
     public function initRequest() {
         return new Suchgenie_Request($this->connectionFactory);
     }

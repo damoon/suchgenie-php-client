@@ -31,7 +31,7 @@ class Suchgenie_ConnectionFactory {
     }
 
     private function createNewDownload() {
-        $download = new Tools_ParallelCurl();
+        $download = new Tools_ParallelCurl("phpclient/" . Suchgenie_Client::VERSION);
         if (isset($this->username)) {
             $download->setAuth($this->username, $this->password);
         }
